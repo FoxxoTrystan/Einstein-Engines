@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from Paradise at https://github.com/ParadiseSS13/Paradise/blob/222f9ae8009515d557dd8e693662666dc3c8e3b1/icons/mob/ai.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "ai",
+      "delays": [
+        [
+          0.2,
+          0.2,
+          0.1,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "ai_dead"
+    },
+    {
+      "name": "ai-empty",
+      "delays": [
+        [
+          0.7,
+          0.7
+        ]
+      ]
+    }
+  ]
+}

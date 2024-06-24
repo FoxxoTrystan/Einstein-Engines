@@ -6,6 +6,7 @@
   components:
   - type: InstantAction
     itemIconStyle: NoItem
+    checkCanInteract: false
     icon:
       sprite: Interface/Actions/actions_borg.rsi
       state: state-laws

@@ -1,0 +1,165 @@
+- type: entity
+  id: AICore
+  name: AI Core
+  parent: BaseStructure
+  save: false
+  components:
+  - type: Sprite
+    sprite: Mobs/Silicon/ai.rsi
+    drawdepth: Mobs
+    noRot: true
+    layers:
+    - state: ai
+  - type: Appearance
+  - type: Anchorable
+    delay: 5
+  - type: MobState
+    allowedStates:
+    - Alive
+    - Dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      300: Dead
+    stateAlertDict:
+      Alive: BorgHealth
+      Critical: BorgCrit
+      Dead: BorgDead
+    showOverlays: false
+    allowRevives: true
+  - type: HealthExaminable
+    examinableTypes:
+    - Blunt
+    - Piercing
+    - Heat
+    locPrefix: silicon # This may need to get changed to something more custom.
+  - type: UserInterface
+    interfaces:
+    - key: enum.SiliconLawsUiKey.Key
+      type: SiliconLawBoundUserInterface
+  - type: SiliconLawBound
+  - type: SiliconLawProvider
+    laws: NTDefault
+  - type: IonStormTarget
+  - type: Repairable
+    doAfterDelay: 20
+    allowSelfRepair: false
+  - type: NameIdentifier
+    group: Silicon
+  - type: InteractionOutline
+  - type: Clickable
+  - type: Input
+    context: "human"
+  - type: Examiner
+  - type: Actions
+  - type: Alerts
+  - type: Polymorphable
+  - type: MindContainer
+  - type: LagCompensation
+  - type: IntrinsicRadioReceiver
+    channels:
+      - Binary
+      - Common
+      - Command
+      - Engineering
+      - Medical
+      - Science
+      - Security
+      - Service
+  - type: IntrinsicRadioTransmitter
+    channels:
+      - Binary
+      - Common
+      - Command
+      - Engineering
+      - Medical
+      - Science
+      - Security
+      - Service
+  - type: ActiveRadio
+    channels:
+      - Binary
+      - Common
+      - Command
+      - CentCom
+      - Engineering
+      - Medical
+      - Science
+      - Security
+      - Service
+  - type: Eye
+    drawFov: true
+    visMask:
+    - PsionicInvisibility
+    - Normal
+  - type: ContentEye
+  - type: TypingIndicator
+    proto: robot
+  - type: Speech
+    speechVerb: Robotic
+    speechSounds: Pai
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.4,0.4,0.4"
+        density: 500
+        mask:
+          - MachineMask
+        layer:
+          - MachineLayer
+  - type: UnblockableSpeech
+  - type: Damageable
+    damageContainer: Silicon
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 75
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          path: /Audio/Machines/warning_buzzer.ogg
+          params:
+            volume: 5
+    - trigger:
+        !type:DamageTrigger
+        damage: 1000
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: PointLight
+    radius: 3
+    energy: 1.25
+    color: "#9dc5c9"
+  - type: Emoting
+  - type: GuideHelp
+    guides:
+      - Cyborgs
+  - type: LanguageSpeaker
+    speaks:
+    - GalacticCommon
+    - RobotTalk
+    understands:
+    - GalacticCommon
+    - RobotTalk
+  - type: ShowSecurityIcons
+  - type: ShowHealthIcons
+  - type: ShowHealthBars
+  - type: CargoSellBlacklist
+  - type: BlockMovement
+  - type: DoAfter
+  - type: Access
+    enabled: false
+    groups:
+    - AllAccess
+  - type: AccessReader
+    access: [["Command"], ["Research"]]
+  # - type: ContainerContainer
+  #   containers:
+  #     borg_brain: !type:ContainerSlot { }
+  - type: Tag
+    tags:
+      - CannotSuicide
