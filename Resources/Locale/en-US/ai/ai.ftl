@@ -1,0 +1,10 @@
+ai-no-mind = No AI present
+ai-has-mind = AI present
+ai-wipe-verb = Wipe AI
+ai-wiped = The AI has been wiped
+ai-wiping = You start wiping the AI
+ai-core-dead = AI is dead.
+ai-core-has-mind = This Core already has an AI
+ai-uploaded = AI Uploaded
+ai-downloaded = AI Downloaded
+ai-core-not-found = No AI found

@@ -3,16 +3,49 @@
   name: AI Core
   parent: BaseStructure
   save: false
+  placement:
+    mode: SnapgridCenter
   components:
+  - type: AICore
   - type: Sprite
     sprite: Mobs/Silicon/ai.rsi
+    snapCardinals: true
     drawdepth: Mobs
     noRot: true
     layers:
-    - state: ai
+    - state: 4
+    - map: ["enum.AICoreLayers.Screen"]
+      state: blue
+      shader: unshaded
+    - map: ["enum.AICoreLayers.NoMind"]
+      state: empty
+      shader: unshaded
+    - map: ["enum.AICoreLayers.Dead"]
+      state: dead
+      shader: unshaded
+      visible: false
   - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.AICoreVisuals.Screen:
+        enum.AICoreLayers.Screen:
+          Blue: { state: blue }
+          Fox: { state: fox }
+      enum.AICoreVisuals.NoMind:
+        enum.AICoreLayers.NoMind:
+          True: { visible: true }
+          False: { visible: false }
+      enum.AICoreVisuals.Dead:
+        enum.AICoreLayers.Dead:
+          True: { visible: true }
+          False: { visible: false }
   - type: Anchorable
     delay: 5
+  - type: ApcPowerReceiver
+    powerLoad: 1000
+  - type: ExtensionCableReceiver
+  - type: LightningTarget
+    priority: 1
   - type: MobState
     allowedStates:
     - Alive
@@ -27,6 +60,9 @@
       Dead: BorgDead
     showOverlays: false
     allowRevives: true
+  - type: GhostOnMove
+  - type: MindContainer
+    showExamineInfo: true
   - type: HealthExaminable
     examinableTypes:
     - Blunt
@@ -37,6 +73,8 @@
     interfaces:
     - key: enum.SiliconLawsUiKey.Key
       type: SiliconLawBoundUserInterface
+    - key: enum.InstrumentUiKey.Key
+      type: InstrumentBoundUserInterface
   - type: SiliconLawBound
   - type: SiliconLawProvider
     laws: NTDefault
@@ -44,28 +82,14 @@
   - type: Repairable
     doAfterDelay: 20
     allowSelfRepair: false
-  - type: NameIdentifier
-    group: Silicon
-  - type: InteractionOutline
-  - type: Clickable
+  - type: RandomMetadata
+    nameSegments: [names_ai]
   - type: Input
     context: "human"
   - type: Examiner
   - type: Actions
   - type: Alerts
-  - type: Polymorphable
-  - type: MindContainer
-  - type: LagCompensation
   - type: IntrinsicRadioReceiver
-    channels:
-      - Binary
-      - Common
-      - Command
-      - Engineering
-      - Medical
-      - Science
-      - Security
-      - Service
   - type: IntrinsicRadioTransmitter
     channels:
       - Binary
@@ -87,17 +111,13 @@
       - Science
       - Security
       - Service
-  - type: Eye
-    drawFov: true
-    visMask:
-    - PsionicInvisibility
-    - Normal
-  - type: ContentEye
   - type: TypingIndicator
     proto: robot
   - type: Speech
     speechVerb: Robotic
     speechSounds: Pai
+  - type: Transform
+    noRot: true
   - type: Fixtures
     fixtures:
       fix1:
@@ -116,7 +136,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 75
+        damage: 100
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -125,19 +145,29 @@
             volume: 5
     - trigger:
         !type:DamageTrigger
-        damage: 1000
+        damage: 200
       behaviors:
       - !type:PlaySoundBehavior
         sound:
-          collection: MetalBreak
+          path: /Audio/Machines/warning_buzzer.ogg
+          params:
+            volume: 5
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          path: /Audio/Machines/borg_deathsound.ogg
+          params:
+            volume: 5
   - type: PointLight
     radius: 3
     energy: 1.25
     color: "#9dc5c9"
-  - type: Emoting
   - type: GuideHelp
     guides:
-      - Cyborgs
+      - AIs
   - type: LanguageSpeaker
     speaks:
     - GalacticCommon
@@ -157,9 +187,116 @@
     - AllAccess
   - type: AccessReader
     access: [["Command"], ["Research"]]
-  # - type: ContainerContainer
-  #   containers:
-  #     borg_brain: !type:ContainerSlot { }
+  - type: Instrument
+    allowPercussion: false
+    handheld: false
+    bank: 1
+    program: 2
   - type: Tag
     tags:
       - CannotSuicide
+
+- type: entity
+  parent: BaseItem
+  id: AICard
+  name: intelliCard
+  description: A handy pocket card used to extract an artificial intelligence for transport.
+  components:
+  - type: Instrument
+    allowPercussion: false
+    handheld: false
+    bank: 1
+    program: 2
+  - type: Sprite
+    sprite: Mobs/Silicon/aicard.rsi
+    layers:
+    - state: aicard
+    - map: ["enum.AICardLayers.Screen"]
+      state: blue
+      shader: unshaded
+    - map: ["enum.AICardLayers.Light"]
+      state: light
+      shader: unshaded
+      visible: false
+    - map: ["enum.AICardLayers.NoMind"]
+      state: empty
+      shader: unshaded
+  - type: GenericVisualizer
+    visuals:
+      enum.AICardVisuals.Screen:
+        enum.AICardLayers.Screen:
+          Blue: { state: blue }
+          Fox: { state: fox }
+      enum.AICardVisuals.NoMind:
+        enum.AICardLayers.NoMind:
+          True: { visible: true }
+          False: { visible: false }
+        enum.AICardLayers.Light:
+          True: { visible: false }
+          False: { visible: true }
+  - type: Input
+    context: "human"
+  - type: Examiner
+  - type: IntrinsicRadioReceiver
+  # - type: IntrinsicRadioTransmitter
+  #   channels:
+  #     - Binary
+  #     - Common
+  #     - Command
+  #     - Engineering
+  #     - Medical
+  #     - Science
+  #     - Security
+  #     - Service
+  - type: ActiveRadio
+    channels:
+      - Binary
+      - Common
+      - Command
+      - CentCom
+      - Engineering
+      - Medical
+      - Science
+      - Security
+      - Service
+  - type: DoAfter
+  - type: Actions
+  - type: MindContainer
+    showExamineInfo: true
+  - type: TypingIndicator
+    proto: robot
+  - type: Speech
+    speechVerb: Robotic
+    speechSounds: Pai
+  - type: MobState
+    allowedStates:
+      - Alive
+  - type: Appearance
+  - type: IonStormTarget
+  - type: ActivatableUI
+    key: enum.SiliconLawsUiKey.Key
+    singleUser: true
+    closeOnHandDeselect: false
+  - type: UserInterface
+    interfaces:
+    - key: enum.SiliconLawsUiKey.Key
+      type: SiliconLawBoundUserInterface
+    - key: enum.InstrumentUiKey.Key
+      type: InstrumentBoundUserInterface
+  - type: SiliconLawBound
+  - type: BlockMovement
+  - type: LanguageSpeaker
+    speaks:
+    - GalacticCommon
+    - RobotTalk
+    understands:
+    - GalacticCommon
+    - RobotTalk
+  - type: ShowSecurityIcons
+  - type: ShowHealthIcons
+  - type: ShowHealthBars
+  - type: CargoSellBlacklist
+  - type: AICard
+  - type: GuideHelp
+    guides:
+      - AIs
