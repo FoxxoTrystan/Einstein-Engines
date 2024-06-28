@@ -1,6 +1,7 @@
 - type: entity
   id: AICore
   name: AI Core
+  description: Host for an AI.
   parent: BaseStructure
   save: false
   placement:
@@ -300,3 +301,6 @@
   - type: GuideHelp
     guides:
       - AIs
+  - type: Tag
+    tags:
+      - CannotSuicide

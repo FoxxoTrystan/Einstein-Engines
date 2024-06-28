@@ -64,3 +64,8 @@
   id: Cyborgs
   name: guide-entry-cyborgs
   text: "/ServerInfo/Guidebook/Science/Cyborgs.xml"
+
+- type: guideEntry
+  id: AIs
+  name: guide-entry-ais
+  text: "/ServerInfo/Guidebook/Science/AIs.xml"

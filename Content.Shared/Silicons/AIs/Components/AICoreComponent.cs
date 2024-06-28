@@ -15,6 +15,9 @@ public sealed partial class AICoreComponent : Component
 
     [DataField("screenState")]
     public string ScreenState = "Blue";
+
+    [ViewVariables]
+    public EntityUid? ActiveCamera { get; set; }
 }
 
 [Serializable, NetSerializable]
