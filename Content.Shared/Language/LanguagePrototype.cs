@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using Content.Shared.Chat;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Language;
@@ -10,18 +10,16 @@ public sealed class LanguagePrototype : IPrototype
     public string ID { get; private set;  } = default!;
 
     /// <summary>
-    ///     If true, obfuscated phrases of creatures speaking this language will have their syllables replaced with "replacement" syllables.
-    ///     Otherwise entire sentences will be replaced.
+    ///     Obfuscation method used by this language. By default, uses <see cref="ObfuscationMethod.Default"/>
     /// </summary>
-    [DataField(required: true)]
-    public bool ObfuscateSyllables;
+    [DataField("obfuscation")]
+    public ObfuscationMethod Obfuscation = ObfuscationMethod.Default;
 
     /// <summary>
-    ///     Lists all syllables that are used to obfuscate a message a listener cannot understand if obfuscateSyllables is true.
-    ///     Otherwise uses all possible phrases the creature can make when trying to say anything.
+    ///     Speech overrides used for messages sent in this language.
     /// </summary>
-    [DataField(required: true)]
-    public List<string> Replacement = [];
+    [DataField("speech")]
+    public SpeechOverrideInfo SpeechOverride = new();
 
     #region utility
     /// <summary>
@@ -34,4 +32,53 @@ public sealed class LanguagePrototype : IPrototype
     /// </summary>
     public string Description => Loc.GetString($"language-{ID}-description");
     #endregion utility
+}
+
+[DataDefinition]
+public sealed partial class SpeechOverrideInfo
+{
+    /// <summary>
+    ///     Color which text in this language will be blended with.
+    ///     Alpha blending is used, which means the alpha component of the color controls the intensity of this color.
+    /// </summary>
+    [DataField]
+    public Color? Color = null;
+
+    [DataField]
+    public string? FontId;
+
+    [DataField]
+    public int? FontSize;
+
+    [DataField]
+    public bool AllowRadio = true;
+
+    /// <summary>
+    ///     If false, the entity can use this language even when it's unable to speak (i.e. muffled or muted),
+    ///     and accents are not applied to messages in this language.
+    /// </summary>
+    [DataField]
+    public bool RequireSpeech = true;
+
+    /// <summary>
+    ///     If not null, all messages in this language will be forced to be spoken in this chat type.
+    /// </summary>
+    [DataField]
+    public InGameICChatType? ChatTypeOverride;
+
+    /// <summary>
+    ///     Speech verb overrides. If not provided, the default ones for the entity are used.
+    /// </summary>
+    [DataField]
+    public List<LocId>? SpeechVerbOverrides;
+
+    /// <summary>
+    ///     Overrides for different kinds chat message wraps. If not provided, the default ones are used.
+    /// </summary>
+    /// <remarks>
+    ///     Currently, only local chat and whispers support this. Radio and emotes are unaffected.
+    ///     This is horrible.
+    /// </remarks>
+    [DataField]
+    public Dictionary<InGameICChatType, LocId> MessageWrapOverrides = new();
 }

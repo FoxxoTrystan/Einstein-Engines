@@ -1,13 +1,31 @@
 - type: trait
   id: UltraVision
   category: Visual
-  points: -1
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      inverted: true
+      species:
+        - Vulpkanin
+        - Harpy
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - DogVision
   components:
     - type: UltraVision
 
 - type: trait
   id: DogVision
   category: Visual
-  points: -1
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      inverted: true
+      species:
+        - Vulpkanin
+        - Harpy
+    - !type:CharacterTraitRequirement
+      inverted: true
+      traits:
+        - UltraVision
   components:
     - type: DogVision
